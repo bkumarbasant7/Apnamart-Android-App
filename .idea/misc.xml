@@ -3,7 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/round_bg.xml" value="0.1515" />
+        <entry key="app/src/main/res/drawable/round_rect_bg.xml" value="0.1515" />
+        <entry key="app/src/main/res/drawable/round_rect_stroke_bg.xml" value="0.129" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/content_layout.xml" value="0.24166666666666667" />
+        <entry key="app/src/main/res/layout/item_layout.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/project_item_layout.xml" value="0.24166666666666667" />
+        <entry key="app/src/main/res/layout/retry_layout.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/trending_menu.xml" value="0.24270833333333333" />
       </map>
     </option>
   </component>
