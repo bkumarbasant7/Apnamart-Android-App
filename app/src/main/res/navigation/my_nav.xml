@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/my_nav"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/trendingFragment">
+
+
+    <fragment
+        android:id="@+id/trendingFragment"
+        android:name="com.apnamart.android.ui.TrendingFragment"
+        tools:layout="@layout/content_layout"
+        android:label="TrendingFragment" >
+        <action
+            android:id="@+id/action_trendingFragment_to_retryFragment"
+            app:destination="@id/retryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/retryFragment"
+        android:name="com.apnamart.android.ui.RetryFragment"
+        tools:layout="@layout/retry_layout"
+        android:label="RetryFragment" >
+        <action
+            android:id="@+id/action_retryFragment_to_trendingFragment"
+            app:destination="@id/trendingFragment" />
+    </fragment>
+</navigation>
