@@ -6,6 +6,7 @@
 
         <import type="android.view.View" />
 
+        <variable name="repo" type="com.apnamart.android.models.RepositoryModel"/>
         <variable
             name="isExpanded"
             type="Boolean" />
@@ -42,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:minWidth="150dp"
+                android:text="@{repo.author}"
                 android:layout_margin="5dp"
                 android:background="@drawable/round_rect_bg"
                 app:layout_constraintBottom_toTopOf="@id/repo_name"
@@ -55,6 +57,7 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:layout_margin="5dp"
+                android:text="@{repo.title}"
                 android:background="@drawable/round_rect_bg"
                 app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:layout_margin="5dp"
+                android:text="@{repo.description}"
                 android:visibility="@{isExpanded? View.VISIBLE:View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/profile_pic"
@@ -80,6 +84,7 @@
                 android:layout_margin="5dp"
                 android:drawableStart="@drawable/round_bg"
                 android:textSize="12sp"
+                android:text="@{repo.languages}"
                 android:drawablePadding="10dp"
                 android:visibility="@{isExpanded? View.VISIBLE:View.GONE}"
                 app:drawableTint="@color/red"
@@ -96,6 +101,7 @@
                 android:textSize="12sp"
                 android:layout_margin="5dp"
                 android:drawablePadding="10dp"
+                android:text="@{@string/int_wrap(repo.star)}"
                 android:drawableStart="@drawable/star_yellow_16"
                 android:visibility="@{isExpanded? View.VISIBLE:View.GONE}"
                 app:layout_constraintEnd_toStartOf="@id/fork"
@@ -111,6 +117,7 @@
                 android:drawablePadding="10dp"
                 android:drawableStart="@drawable/fork_black_16"
                 android:layout_margin="5dp"
+                android:text="@{@string/int_wrap(repo.forkCount)}"
                 android:visibility="@{isExpanded? View.VISIBLE:View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/star"
