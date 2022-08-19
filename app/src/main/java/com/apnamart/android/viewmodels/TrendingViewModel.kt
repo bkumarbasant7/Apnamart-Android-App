@@ -7,12 +7,11 @@ import com.apnamart.android.models.RepositoryModel
 import com.apnamart.android.utils.parseToTrendingModel
 import com.apnamart.android.utils.webservice
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.logging.Handler
 
 class TrendingViewModel : ViewModel() {
+    val isErrorOccurred: MutableLiveData<Boolean> by lazy { MutableLiveData(false) }
     private val listOfRepos = mutableListOf<RepositoryModel>()
     val isLoading: MutableLiveData<Boolean> by lazy { MutableLiveData() }
     val trendingReposObservable: MutableLiveData<List<RepositoryModel>> by lazy { MutableLiveData() }
@@ -24,6 +23,7 @@ class TrendingViewModel : ViewModel() {
             for (i in 0..10) {
                 listOfRepos.add(
                     RepositoryModel(
+                        "",
                         "",
                         "",
                         "",
@@ -46,16 +46,18 @@ class TrendingViewModel : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 isLoading.postValue(true)
-                delay(5000)
                 try {
                     val response = webservice.getTrendingRepos()
                     if (response.isSuccessful) {
                         initializeData(response.body()!!.parseToTrendingModel())
+                        isErrorOccurred.postValue(false)
                     }
                     isLoading.postValue(false)
 
                 } catch (e: Exception) {
+                    isErrorOccurred.postValue(true)
                     e.printStackTrace()
+                    isLoading.postValue(false)
                 }
             }
         }

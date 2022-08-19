@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.apnamart.android.R
 import com.apnamart.android.adapters.RepositoryAdapter
 import com.apnamart.android.databinding.ContentLayoutBinding
@@ -33,6 +34,12 @@ class TrendingFragment : Fragment() {
         viewmodel.trendingReposObservable.observe(this, Observer {
             adapter.setData(it)
             viewmodel.isLoading.postValue(false)
+        })
+        viewmodel.isErrorOccurred.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                requireActivity().findNavController(R.id.trending_container)
+                    .navigate(R.id.retryFragment)
+            }
         })
     }
 

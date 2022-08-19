@@ -27,10 +27,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="50dp"
-                android:minHeight="50dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:padding="1dp"
                 android:layout_margin="5dp"
                 android:src="@drawable/round_bg"
@@ -45,7 +43,6 @@
                 android:minWidth="150dp"
                 android:text="@{repo.author}"
                 android:layout_margin="5dp"
-                android:background="@drawable/round_rect_bg"
                 app:layout_constraintBottom_toTopOf="@id/repo_name"
                 app:layout_constraintStart_toEndOf="@id/profile_pic"
                 app:layout_constraintTop_toTopOf="@id/profile_pic" />
@@ -58,7 +55,6 @@
                 android:textSize="16sp"
                 android:layout_margin="5dp"
                 android:text="@{repo.title}"
-                android:background="@drawable/round_rect_bg"
                 app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/profile_pic"

@@ -14,6 +14,7 @@ fun TrendingRepoResponse.parseToTrendingModel(): List<RepositoryModel> {
             star = i.stargazers_count ?: 0,
             title = i.full_name ?: "NA",
             languages = i.language ?: "NA",
+            profilePic = i.owner.avatar_url,
             isExpanded = false
         )
         list.add(model)

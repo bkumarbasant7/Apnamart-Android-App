@@ -3,6 +3,7 @@ package com.apnamart.android.models
 data class RepositoryModel(
     val author: String,
     val title: String,
+    val profilePic: String,
     val description: String,
     val forkCount: Int,
     val star: Int,

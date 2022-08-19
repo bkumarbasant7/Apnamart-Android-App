@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apnamart.android.R
 import com.apnamart.android.databinding.ItemLayoutBinding
 import com.apnamart.android.models.RepositoryModel
+import com.apnamart.android.utils.loadImage
 
 class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
     inner class RepositoryViewHolder(val bind: ItemLayoutBinding) :
@@ -41,7 +42,16 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
         holder.bind.isExpanded = allData[position].isExpanded
         holder.bind.repo = allData[position]
         holder.bind.isLoaded = !isLoading
+        if(allData[position].author.isEmpty()){
+            holder.bind.authorName.setBackgroundDrawable(holder.itemView.context.resources.getDrawable(R.drawable.round_rect_bg))
+            holder.bind.repoName.setBackgroundDrawable(holder.itemView.context.resources.getDrawable(R.drawable.round_rect_bg))
+        }else{
+            holder.bind.authorName.setBackgroundColor(holder.itemView.context.resources.getColor(R.color.white))
+            holder.bind.repoName.setBackgroundColor(holder.itemView.context.resources.getColor(R.color.white))
+        }
+        holder.bind.profilePic.loadImage(holder.itemView.context,allData[position].profilePic)
         holder.itemView.setOnClickListener {
+            if(allData[position].author.isNotEmpty())
             updateMasterList(position)
         }
         holder.bind.executePendingBindings()
