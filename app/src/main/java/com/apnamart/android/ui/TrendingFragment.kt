@@ -11,7 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.apnamart.android.R
 import com.apnamart.android.adapters.RepositoryAdapter
+import com.apnamart.android.dataSource.RepositoryDb
+import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.databinding.ContentLayoutBinding
+import com.apnamart.android.utils.webservice
+import com.apnamart.android.viewmodels.ParamViewModelFactory
 import com.apnamart.android.viewmodels.TrendingViewModel
 
 class TrendingFragment : Fragment() {
@@ -27,6 +31,33 @@ class TrendingFragment : Fragment() {
         super.onResume()
         viewmodel.initializeData(null)
         viewmodel.setData()
+        adapter.setCallback(object : RepositoryAdapter.ExpandListener {
+            override fun onExpand(position: Int) {
+                val expandedAt = viewmodel.isExpandedAt.value!!
+                val allData = viewmodel.trendingReposObservable.value!!
+                if (expandedAt == -1) {
+                    allData[position].isExpanded = true
+                    viewmodel.isExpandedAt.postValue(position)
+                    adapter.notifyItemChanged(position)
+
+                } else if (expandedAt >= 0) {
+                    if (expandedAt == position) {
+                        allData[expandedAt].isExpanded = false
+                        adapter.notifyItemChanged(expandedAt)
+                        viewmodel.isExpandedAt.postValue(-1)
+                    } else {
+                        if (allData[expandedAt].isExpanded) {
+                            allData[expandedAt].isExpanded = false
+                            adapter.notifyItemChanged(expandedAt)
+                            allData[position].isExpanded = true
+                            adapter.notifyItemChanged(position)
+                            viewmodel.isExpandedAt.postValue(position)
+                        }
+                    }
+
+                }
+            }
+        })
         viewmodel.isLoading.observe(viewLifecycleOwner, Observer {
             adapter.setLoadView(it)
             binding.refreshLayout.isRefreshing = it
@@ -43,13 +74,25 @@ class TrendingFragment : Fragment() {
         })
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.content_layout, container, false)
-        viewmodel = ViewModelProvider(requireActivity())[TrendingViewModel::class.java]
+        viewmodel = ViewModelProvider(
+            requireActivity(),
+            ParamViewModelFactory(
+                TrendingRepository(
+                    RepositoryDb(requireContext().applicationContext),
+                    webservice
+                )
+            )
+        )[TrendingViewModel::class.java]
         adapter = RepositoryAdapter()
         binding.trendingRepoRv.adapter = adapter
 

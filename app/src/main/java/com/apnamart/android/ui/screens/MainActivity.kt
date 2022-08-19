@@ -6,20 +6,35 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
-import android.os.Debug
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.apnamart.android.R
+import com.apnamart.android.dataSource.RepositoryDb
+import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.databinding.ActivityMainBinding
+import com.apnamart.android.utils.webservice
+import com.apnamart.android.viewmodels.ParamViewModelFactory
+import com.apnamart.android.viewmodels.TrendingViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewmodel: TrendingViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        viewmodel = ViewModelProvider(
+            this, ParamViewModelFactory(
+                TrendingRepository(
+                    RepositoryDb(applicationContext),
+                    webservice
+                )
+            )
+        )[TrendingViewModel::class.java]
     }
 
     override fun onResume() {
@@ -44,7 +59,8 @@ class MainActivity : AppCompatActivity() {
         // network is available for use
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
-            Log.d("LOST CONNECTION" , "FALSE")
+            Log.d("LOST CONNECTION", "FALSE")
+            viewmodel.isErrorOccurred.postValue(false)
         }
 
         // Network capabilities have changed for the network
@@ -62,7 +78,14 @@ class MainActivity : AppCompatActivity() {
         // lost network connection
         override fun onLost(network: Network) {
             super.onLost(network)
-            Log.d("LOST CONNECTION" , "LOST")
+            if (viewmodel.trendingReposObservable.value!!.isEmpty())
+                viewmodel.isErrorOccurred.postValue(true)
+            else Snackbar.make(
+                binding.root,
+                "Connection lost",
+                Snackbar.LENGTH_SHORT
+            ).show()
+
         }
     }
 }

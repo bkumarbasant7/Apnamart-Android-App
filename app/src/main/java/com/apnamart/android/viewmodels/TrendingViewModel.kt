@@ -3,18 +3,20 @@ package com.apnamart.android.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.models.RepositoryModel
-import com.apnamart.android.utils.parseToTrendingModel
-import com.apnamart.android.utils.webservice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TrendingViewModel : ViewModel() {
+class TrendingViewModel(val repo: TrendingRepository) : ViewModel() {
     val isErrorOccurred: MutableLiveData<Boolean> by lazy { MutableLiveData(false) }
     private val listOfRepos = mutableListOf<RepositoryModel>()
     val isLoading: MutableLiveData<Boolean> by lazy { MutableLiveData() }
     val trendingReposObservable: MutableLiveData<List<RepositoryModel>> by lazy { MutableLiveData() }
+
+    val isExpandedAt: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
+    val scrollPos: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
 
     fun initializeData(data: List<RepositoryModel>?) {
         isLoading.postValue(true)
@@ -23,6 +25,7 @@ class TrendingViewModel : ViewModel() {
             for (i in 0..10) {
                 listOfRepos.add(
                     RepositoryModel(
+                        i,
                         "",
                         "",
                         "",
@@ -36,6 +39,21 @@ class TrendingViewModel : ViewModel() {
             }
         if (data != null) {
             listOfRepos.addAll(data)
+
+            if (isExpandedAt.value!! >= 0) {
+                for (i in data.indices) {
+                    if (i == isExpandedAt.value!!) {
+                        val oldData = data[i]
+                        oldData.isExpanded = true
+                        listOfRepos[i] = oldData
+                    } else {
+                        val oldData = data[i]
+                        oldData.isExpanded = false
+                        listOfRepos[i] = oldData
+                    }
+                }
+            }
+
         }
 
         trendingReposObservable.postValue(listOfRepos)
@@ -47,10 +65,15 @@ class TrendingViewModel : ViewModel() {
             withContext(Dispatchers.IO) {
                 isLoading.postValue(true)
                 try {
-                    val response = webservice.getTrendingRepos()
-                    if (response.isSuccessful) {
-                        initializeData(response.body()!!.parseToTrendingModel())
-                        isErrorOccurred.postValue(false)
+                    val response =
+                        repo.getTrendingRepos(object : TrendingRepository.OnErrorListener {
+                            override fun onError(error: String?) {
+                                isErrorOccurred.postValue(true)
+                                return
+                            }
+                        })
+                    if (response.isNotEmpty()) {
+                        initializeData(response)
                     }
                     isLoading.postValue(false)
 

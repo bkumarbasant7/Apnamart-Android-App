@@ -8,6 +8,7 @@ fun TrendingRepoResponse.parseToTrendingModel(): List<RepositoryModel> {
     val list = mutableListOf<RepositoryModel>()
     for (i in items) {
         val model = RepositoryModel(
+            id = i.id,
             author = i.name ?: "",
             description = i.description ?: "NA",
             forkCount = i.forks_count ?: 0,

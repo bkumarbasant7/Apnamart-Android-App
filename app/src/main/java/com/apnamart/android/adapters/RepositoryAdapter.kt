@@ -15,6 +15,14 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
 
     }
 
+    interface ExpandListener {
+        fun onExpand(position: Int)
+    }
+
+    private var callback: ExpandListener? = null
+    fun setCallback(listener: ExpandListener) {
+        callback = listener
+    }
 
     private val allData: MutableList<RepositoryModel> = mutableListOf()
     private var isLoading = false
@@ -58,27 +66,7 @@ class RepositoryAdapter : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewH
     }
 
     private fun updateMasterList(position: Int) {
-        if (expandedAt == -1) {
-            allData[position].isExpanded = true
-            expandedAt = position
-            notifyItemChanged(position)
-
-        } else if (expandedAt >= 0) {
-            if (expandedAt == position) {
-                allData[expandedAt].isExpanded = false
-                notifyItemChanged(expandedAt)
-                expandedAt = -1
-            } else {
-                if (allData[expandedAt].isExpanded) {
-                    allData[expandedAt].isExpanded = false
-                    notifyItemChanged(expandedAt)
-                    allData[position].isExpanded = true
-                    notifyItemChanged(position)
-                    expandedAt = position
-                }
-            }
-
-        }
+        callback?.onExpand(position)
     }
 
     override fun getItemCount(): Int {
