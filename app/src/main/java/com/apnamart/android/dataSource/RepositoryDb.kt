@@ -1,10 +1,13 @@
 package com.apnamart.android.dataSource
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.apnamart.android.models.RepositoryModel
+import com.apnamart.android.utils.clearCache
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @Database(entities = [RepositoryModel::class], version = 1)
@@ -31,5 +34,8 @@ abstract class RepositoryDb : RoomDatabase() {
             RepositoryDb::class.java,
             "RepositoryDatabase"
         ).build()
+        fun clearCache(context: Context){
+            context.applicationContext.clearCache()
+        }
     }
 }

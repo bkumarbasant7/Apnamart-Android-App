@@ -60,13 +60,13 @@ class TrendingViewModel(val repo: TrendingRepository) : ViewModel() {
 
     }
 
-    fun setData() {
+    fun setData(isRefreshed:Boolean) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 isLoading.postValue(true)
                 try {
                     val response =
-                        repo.getTrendingRepos(object : TrendingRepository.OnErrorListener {
+                        repo.getTrendingRepos(isRefreshed,object : TrendingRepository.OnErrorListener {
                             override fun onError(error: String?) {
                                 isErrorOccurred.postValue(true)
                                 return
@@ -89,7 +89,7 @@ class TrendingViewModel(val repo: TrendingRepository) : ViewModel() {
     fun refresh() {
         isLoading.postValue(true)
         initializeData(null)
-        setData()
+        setData(true)
         isLoading.postValue(false)
     }
 }

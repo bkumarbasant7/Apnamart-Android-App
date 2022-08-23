@@ -12,10 +12,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.apnamart.android.R
-import com.apnamart.android.dataSource.RepositoryDb
 import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.databinding.ActivityMainBinding
-import com.apnamart.android.utils.webservice
 import com.apnamart.android.viewmodels.ParamViewModelFactory
 import com.apnamart.android.viewmodels.TrendingViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -29,10 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewmodel = ViewModelProvider(
             this, ParamViewModelFactory(
-                TrendingRepository(
-                    RepositoryDb(applicationContext),
-                    webservice
-                )
+                TrendingRepository(this)
             )
         )[TrendingViewModel::class.java]
     }
@@ -44,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             TODO("VERSION.SDK_INT < M")
         }
-
         connectivityManager.requestNetwork(networkRequest, networkCallback)
     }
 

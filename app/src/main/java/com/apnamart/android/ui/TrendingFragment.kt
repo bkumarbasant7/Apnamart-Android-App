@@ -11,10 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.apnamart.android.R
 import com.apnamart.android.adapters.RepositoryAdapter
-import com.apnamart.android.dataSource.RepositoryDb
 import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.databinding.ContentLayoutBinding
-import com.apnamart.android.utils.webservice
 import com.apnamart.android.viewmodels.ParamViewModelFactory
 import com.apnamart.android.viewmodels.TrendingViewModel
 
@@ -30,7 +28,7 @@ class TrendingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewmodel.initializeData(null)
-        viewmodel.setData()
+        viewmodel.setData(false)
         adapter.setCallback(object : RepositoryAdapter.ExpandListener {
             override fun onExpand(position: Int) {
                 val expandedAt = viewmodel.isExpandedAt.value!!
@@ -88,8 +86,7 @@ class TrendingFragment : Fragment() {
             requireActivity(),
             ParamViewModelFactory(
                 TrendingRepository(
-                    RepositoryDb(requireContext().applicationContext),
-                    webservice
+                    requireContext()
                 )
             )
         )[TrendingViewModel::class.java]

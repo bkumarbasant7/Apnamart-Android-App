@@ -1,5 +1,6 @@
 package com.apnamart.android.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.apnamart.android.R
-import com.apnamart.android.dataSource.RepositoryDb
 import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.databinding.RetryLayoutBinding
-import com.apnamart.android.utils.webservice
 import com.apnamart.android.viewmodels.ParamViewModelFactory
 import com.apnamart.android.viewmodels.TrendingViewModel
+import java.io.File
 
 class RetryFragment : Fragment() {
     private lateinit var binding: RetryLayoutBinding
@@ -31,8 +31,7 @@ class RetryFragment : Fragment() {
             requireActivity(),
             ParamViewModelFactory(
                 TrendingRepository(
-                    RepositoryDb(requireContext().applicationContext),
-                    webservice
+                    requireContext()
                 )
             )
         )[TrendingViewModel::class.java]
@@ -42,7 +41,7 @@ class RetryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.appCompatButton.setOnClickListener {
-            viewmodel.setData()
+            viewmodel.setData(false)
         }
         viewmodel.isErrorOccurred.observe(viewLifecycleOwner, Observer {
             if (!it) {
@@ -51,4 +50,6 @@ class RetryFragment : Fragment() {
             }
         })
     }
+
+
 }

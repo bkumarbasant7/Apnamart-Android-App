@@ -17,4 +17,7 @@ interface RepositoryDao {
     @Delete
     suspend fun deleteRepo(repo: RepositoryModel)
 
+    @Query("Delete  from trendingRepository")
+    suspend fun clearRepo()
+
 }
