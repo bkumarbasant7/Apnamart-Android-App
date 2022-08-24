@@ -10,7 +10,7 @@ class ApnaMartApp : Application() {
     override fun onCreate() {
         super.onCreate()
         val myWork = PeriodicWorkRequestBuilder<CachingClearWorker>(
-            5, TimeUnit.SECONDS
+            2, TimeUnit.HOURS
         )
             .build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
