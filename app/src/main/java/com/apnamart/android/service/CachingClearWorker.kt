@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.apnamart.android.dataSource.RepositoryDb
+import com.apnamart.android.utils.clearCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,6 +15,7 @@ class CachingClearWorker(appContext: Context, workerParams: WorkerParameters) :
     override suspend fun doWork(): Result {
         withContext(Dispatchers.IO) {
             RepositoryDb.clearCache(CNTXT)
+//            CNTXT.clearCache()
             Log.d("CLEAR CACHE", "SUCCESS")
         }.also {
             return Result.success()

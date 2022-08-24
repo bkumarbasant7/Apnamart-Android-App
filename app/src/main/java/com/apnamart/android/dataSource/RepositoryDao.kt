@@ -1,7 +1,9 @@
 package com.apnamart.android.dataSource
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.apnamart.android.models.RepositoryModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RepositoryDao {
@@ -12,7 +14,7 @@ interface RepositoryDao {
 
     @Transaction
     @Query("SELECT * from trendingRepository")
-    suspend fun getAllTrendingRepos():List<RepositoryModel>
+    suspend fun getAllTrendingRepos(): List<RepositoryModel>
 
     @Delete
     suspend fun deleteRepo(repo: RepositoryModel)

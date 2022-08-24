@@ -25,17 +25,17 @@ class TrendingRepository(val context: Context) {
     suspend fun getTrendingRepos(
         isRefreshed: Boolean,
         listener: OnErrorListener
-    ): List<RepositoryModel> {
+    ): List<RepositoryModel>{
         try {
             if (isRefreshed) {
                 loadDataFromRemote(listener)
             } else {
-//                val cachedData = local.getAllTrendingRepos()
-//                if (cachedData.isEmpty()) {
-//                    loadDataFromRemote(listener)
-//
-//                }
-                loadDataFromRemote(listener)
+                val cachedData = local.getAllTrendingRepos()
+                if (cachedData.isEmpty()) {
+                    loadDataFromRemote(listener)
+
+                }
+//                loadDataFromRemote(listener)
 
             }
 
@@ -58,8 +58,10 @@ class TrendingRepository(val context: Context) {
 //                            local.insertRepo(i)
 //                        }
 //                    }
+                    if(response.body()!!.parseToTrendingModel().isNotEmpty()) {
                     getAllTrendingRepos = response.body()!!.parseToTrendingModel()
                     allTrendingRepos.postValue(response.body()!!.parseToTrendingModel())
+                        }
 
                 } else {
                     listener.onError(response.message())

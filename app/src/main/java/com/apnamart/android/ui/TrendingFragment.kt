@@ -13,6 +13,7 @@ import com.apnamart.android.R
 import com.apnamart.android.adapters.RepositoryAdapter
 import com.apnamart.android.dataSource.TrendingRepository
 import com.apnamart.android.databinding.ContentLayoutBinding
+import com.apnamart.android.utils.hasNetwork
 import com.apnamart.android.viewmodels.ParamViewModelFactory
 import com.apnamart.android.viewmodels.TrendingViewModel
 
@@ -61,6 +62,7 @@ class TrendingFragment : Fragment() {
             binding.refreshLayout.isRefreshing = it
         })
         viewmodel.trendingReposObservable.observe(this, Observer {
+            if(it.isNotEmpty()) viewmodel.isErrorOccurred.postValue(false)
             adapter.setData(it)
             viewmodel.isLoading.postValue(false)
         })
@@ -94,7 +96,10 @@ class TrendingFragment : Fragment() {
         binding.trendingRepoRv.adapter = adapter
 
         binding.refreshLayout.setOnRefreshListener {
+            if (requireContext().hasNetwork() == true)
             viewmodel.refresh()
+
+            viewmodel.isLoading.postValue(false)
         }
 
         return binding.root
