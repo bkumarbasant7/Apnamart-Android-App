@@ -72,7 +72,7 @@ class TrendingViewModel(val repo: TrendingRepository) : ViewModel() {
                                 return
                             }
                         })
-                    if (response.isNotEmpty()) {
+                    if (response!=null && response.isNotEmpty()) {
                         initializeData(response)
                     }
                     isLoading.postValue(false)

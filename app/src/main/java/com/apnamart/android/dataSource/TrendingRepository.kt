@@ -1,6 +1,8 @@
 package com.apnamart.android.dataSource
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.apnamart.android.models.RepositoryModel
 import com.apnamart.android.utils.RemoteServiceProvider
 import com.apnamart.android.utils.parseToTrendingModel
@@ -12,6 +14,9 @@ import java.net.UnknownHostException
 class TrendingRepository(val context: Context) {
 
     private val local = RepositoryDb(context.applicationContext).repoDao()
+    private val allTrendingRepos: MutableLiveData<List<RepositoryModel>> by lazy { MutableLiveData() }
+
+    var getAllTrendingRepos: List<RepositoryModel> = allTrendingRepos.value ?: emptyList()
 
     interface OnErrorListener {
         fun onError(error: String?)
@@ -25,11 +30,13 @@ class TrendingRepository(val context: Context) {
             if (isRefreshed) {
                 loadDataFromRemote(listener)
             } else {
-                val cachedData = local.getAllTrendingRepos()
-                if (cachedData.isEmpty()) {
-                    loadDataFromRemote(listener)
+//                val cachedData = local.getAllTrendingRepos()
+//                if (cachedData.isEmpty()) {
+//                    loadDataFromRemote(listener)
+//
+//                }
+                loadDataFromRemote(listener)
 
-                }
             }
 
         }catch (e:Exception) {
@@ -45,12 +52,14 @@ class TrendingRepository(val context: Context) {
             withContext(Dispatchers.IO) {
                 val response = RemoteServiceProvider(context).webService.getTrendingRepos()
                 if (response.isSuccessful) {
-                    val newData = response.body()!!.parseToTrendingModel()
-                    runBlocking {
-                        for (i in newData) {
-                            local.insertRepo(i)
-                        }
-                    }
+//                    val newData = response.body()!!.parseToTrendingModel()
+//                    runBlocking {
+//                        for (i in newData) {
+//                            local.insertRepo(i)
+//                        }
+//                    }
+                    getAllTrendingRepos = response.body()!!.parseToTrendingModel()
+                    allTrendingRepos.postValue(response.body()!!.parseToTrendingModel())
 
                 } else {
                     listener.onError(response.message())
